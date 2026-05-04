@@ -1,0 +1,41 @@
+const { NUMBER, STRING, ENUM } = require("sequelize");
+const connect = require("./conn");
+const HOUSES = connect.define('casas',{
+    idUser:{
+        type:NUMBER,
+        allowNull:false
+    },
+    provincia:{
+        type:STRING,
+        allowNull:false,
+    },
+    municipio:{
+        type:STRING,
+        allowNull:false
+    },
+    bairro:{
+        type:STRING,
+        allowNull:false
+    },
+    preco:{
+        type:NUMBER,
+        allowNull:false
+    },
+    image:{
+        type:STRING,
+        allowNull:false
+    },
+    state:{
+        type:ENUM(true,false),
+        defaultValue:false
+    },
+    tipologia:{
+        type:NUMBER,
+        allowNull:false
+    },
+    discrição:{
+        type:STRING,
+        allowNull:true
+    }    
+}) 
+module.exports=HOUSES;

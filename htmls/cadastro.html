@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Curandeiro View doentes</title>
+
+  <style>
+    *{
+    margin: 0px;
+    padding: 0px;
+}
+:root{
+    --corpo :  rgb(45, 116, 98);
+    --font-fam:"Segoe UI", sans-serif ;
+    --tex-color:black
+} 
+
+body{
+    background-color: #fff;
+    font-family: var(--font-fam);
+    color:var(--tex-color) ;
+}
+
+    header {
+      background: var(--corpo);
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    table th {
+      background: #f0f0f0;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      background: #036122;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #036122;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .info {
+      margin-bottom: 10px;
+    }
+
+    .info strong {
+      display: inline-block;
+      width: 160px;
+    }
+
+    .back {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<!-- wy fiz em uma unica pagina com js tinha preguiça de criar outra, tambem queria praticr js no lado cliente nunca mais pratuquei -->
+<header>
+  <h1>Curandeiro</h1>
+</header>
+
+<div class="container">
+
+  <!-- LISTA DE PACIENTES -->
+  <div id="listaPacientes">
+    <h2>Lista de Pacientes</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Sexo</th>
+          <th>Telefone</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Maria João</td>
+          <td>Feminino</td>
+          <td>923 456 789</td>
+          <td>
+            <button onclick="verPaciente('Maria João','Feminino','30','923 456 789','Luanda','malaria')">
+              Ver
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Carlos Manuel</td>
+          <td>Masculino</td>
+          <td>912 111 222</td>
+          <td>
+            <button onclick="verPaciente('Carlos Manuel','Masculino','42','912 111 222','Benguela','Malatia')">
+              Ver
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DADOS DO PACIENTE -->
+  <div id="dadosPaciente" class="hidden">
+    <h2>Dados do Paciente</h2>
+
+    <div class="info"><strong>Nome:</strong> <span id="nome"></span></div>
+    <div class="info"><strong>Sexo:</strong> <span id="sexo"></span></div>
+    <div class="info"><strong>Idade:</strong> <span id="idade"></span></div>
+    <div class="info"><strong>Telefone:</strong> <span id="telefone"></span></div>
+    <div class="info"><strong>Endereço:</strong> <span id="endereco"></span></div>
+    <div class="info"><strong>Histórico Clínico:</strong> <span id="historico"></span></div>
+
+    <div class="back">
+      <button onclick="voltar()">Voltar à lista</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function verPaciente(nome, sexo, idade, telefone, endereco, historico) {
+    document.getElementById('listaPacientes').classList.add('hidden');
+    document.getElementById('dadosPaciente').classList.remove('hidden');
+
+    document.getElementById('nome').innerText = nome;
+    document.getElementById('sexo').innerText = sexo;
+    document.getElementById('idade').innerText = idade;
+    document.getElementById('telefone').innerText = telefone;
+    document.getElementById('endereco').innerText = endereco;
+    document.getElementById('historico').innerText = historico;
+  }
+
+  function voltar() {
+    document.getElementById('dadosPaciente').classList.add('hidden');
+    document.getElementById('listaPacientes').classList.remove('hidden');
+  }
+</script>
+
+</body>
+</html>

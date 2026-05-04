@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Escolar</title>
+ <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <h1 class="header-title">Marketplace Escolar</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar produtos...">
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <!-- PRODUTOS -->
+        <div id="productsScreen" class="screen active">
+            
+            <div class="category-filter">
+                <div class="category-scroll">
+                    <button class="category-chip active" data-category="">Todos</button>
+                    <button class="category-chip" data-category="Material Escolar">Material</button>
+                    <button class="category-chip" data-category="Livros">Livros</button>
+                    <button class="category-chip" data-category="Uniformes">Uniformes</button>
+                    <button class="category-chip" data-category="Eletrônicos">Eletrônicos</button>
+                </div>
+            </div>
+
+            <div class="price-filter">
+                <button id="priceFilterBtn" class="price-filter-btn">
+                    Filtrar por preço
+                </button>
+            </div>
+
+            <div class="products-container">
+                <div id="productsGrid" class="products-grid"></div>
+            </div>
+        </div>
+
+        <!-- LOJAS -->
+        <div id="storesScreen" class="screen">
+            <div class="stores-container">
+                <div id="storesList" class="stores-list"></div>
+            </div>
+        </div>
+        
+
+        <!-- PERFIL -->
+        <div id="profileScreen" class="screen">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-info">
+                    <h2>Usuário</h2>
+                    <p>Bem-vindo</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="bottom-nav">
+        <button class="nav-item active" data-screen="products">
+            🏠 <span>Produtos</span>
+        </button>
+        <button class="nav-item" data-screen="stores">
+            🏪 <span>Lojas</span>
+        </button>
+        <button id="addBtn" class="nav-item">
+            ➕ <span>Adicionar</span>
+        </button>
+        <button class="nav-item" data-screen="profile">
+            👤 <span>Perfil</span>
+        </button>
+    </div>
+
+    <!-- MODAL MENU -->
+    <div id="addMenuModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-menu">
+            <div class="menu-options">
+                <button id="btnCreateStore" class="menu-option">Criar Loja</button>
+                <button id="btnCreateProduct" class="menu-option">Criar Produto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR LOJA -->
+    <div id="createStoreModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Criar Loja</h3>
+                <button class="modal-close">×</button>
+            </div>
+
+            <form id="storeForm" class="modal-form">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input id="storeName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Dono</label>
+                    <input id="storeOwner" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="storeDescription"></textarea>
+                </div>
+
+                <button class="btn-primary">Salvar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CRIAR PRODUTO -->
+    <div id="createProductModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Criar Produto</h3>
+                <button class="modal-close">×</button>
+            </div>
+
+            <form id="productForm" class="modal-form">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input id="productName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Preço</label>
+                    <input id="productPrice" type="number" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="productCategory">
+                        <option>Material Escolar</option>
+                        <option>Livros</option>
+                        <option>Uniformes</option>
+                        <option>Eletrônicos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Loja</label>
+                    <select id="productStore"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Imagem URL</label>
+                    <input id="productImage">
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="productDescription"></textarea>
+                </div>
+
+                <button class="btn-primary">Salvar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL FILTRO PREÇO -->
+    <div id="priceRangeModal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Filtrar Preço</h3>
+                <button class="modal-close">×</button>
+            </div>
+
+            <div class="modal-form">
+                <input id="minPriceInput" type="number" value="0">
+                <input id="maxPriceInput" type="number" value="1000">
+
+                <button id="applyPriceFilter" class="btn-primary">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="app.js"></script>
+    
+
+</body>
+</html>

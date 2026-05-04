@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <!-- provincia,preco,bairro,municipio,imagem ,state,tipologia -->
+  <form action="http://localhost:3000/api/postNewHouse" method="post" enctype="multipart/form-data" >
+    <label>Provincia</label>
+    <input type="text" name="provincia" id="">
+    <br>
+    <label>preco</label>
+    <input type="text" name="preco" id="">
+    <br>
+    
+    <label>bairro</label>
+    <input type="text" name="bairro" id="">
+    <br>
+    <label>municipio</label>
+    <input type="text" name="municipio" id="">
+    <br>
+    <label>state</label>
+    <input type="text" name="state" id="">
+    <br>
+    <label>tipologia</label>
+    <input type="number" name="tipologia" id="">
+    <br>
+    <input type="file" name="image">
+    <br>
+    <a href="http://" target="_blank" rel="noopener noreferrer"></a>
+    <input type="submit" value="enviar">
+  </form>
+</body>
+</html>
