@@ -12,7 +12,7 @@ const {userValidator } = require("./src/validators/userValidator");
 const {validation} = require("./src/validators/validatorShema");
 /* main router */
 router.get("/", (req, res) => {
-    
+     
     res.sendFile(__dirname + "/htmls/index.html");
 });
 
