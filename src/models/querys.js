@@ -1,10 +1,12 @@
 const HOUSES = require("./hauseModel");
 const connect = require("./conn");
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient();
 module.exports = {
     /* Query to get all houses */
     getAll: async () => {
         try {
-            const houses = await HOUSES.findAll();
+            const houses = await prisma.casas.findMany();
             return houses;
         } catch (error) {
             console.log(error);
@@ -14,7 +16,8 @@ module.exports = {
     /* Query to get one house for idHouse */
     getOne: async (id) => {
         try {
-            const house = await HOUSES.findOne({ where: { id: id } });
+            id = Number(id);
+            const house = await prisma.casas.findUnique({ where: { id: id } });
             return house;
         } catch (error) {
             console.log(error);
