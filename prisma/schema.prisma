@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model casas {
+  id            Int            @id @default(autoincrement())
+  idUser        Int?
+  localizacao   Int?
+  preco         Float?
+  images        Int?
+  state         String?        @default("nao vendido") @db.VarChar(144)
+  tipologia     Int?
+  discri__o     String?        @map("discrição") @db.LongText
+  createdAt     DateTime?      @db.Date
+  updatedAt     DateTime?      @db.Date
+  users         users?         @relation(fields: [idUser], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "casas_ibfk_1")
+  imagens_casas imagens_casas? @relation(fields: [images], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "casas_ibfk_2")
+  localizaco    localizaco?    @relation(fields: [localizacao], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "casas_ibfk_3")
+
+  @@index([idUser], map: "idUser")
+  @@index([images], map: "images")
+  @@index([localizacao], map: "localizacao")
+}
+
+model imagens_casas {
+  image1 String? @db.VarChar(144)
+  image2 String? @db.VarChar(144)
+  image3 String? @db.VarChar(144)
+  id     Int     @id
+  casas  casas[]
+}
+
+model localizaco {
+  id        Int     @id
+  provincia String? @db.VarChar(24)
+  municipio String? @db.VarChar(24)
+  bairro    String? @db.VarChar(24)
+  casas     casas[]
+}
+
+model produto {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  preco Float
+}
+
+model users {
+  id           Int       @id
+  nome         String?   @db.VarChar(45)
+  email        String?   @db.VarChar(45)
+  telefone     Int?
+  token        String    @db.VarChar(70)
+  password_has String?   @db.VarChar(188)
+  updatedAt    DateTime? @db.Date
+  createdAt    DateTime? @db.Date
+  casas        casas[]
+}

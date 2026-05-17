@@ -12,6 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "nodemailer": "^8.0.3"
+    "@prisma/client": "^5.22.0",
+    "nodemailer": "^8.0.3",
+    "prisma": "^5.22.0"
   }
 }
