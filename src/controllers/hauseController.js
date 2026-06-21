@@ -1,4 +1,3 @@
-
 const { getAll, getHouses, postNewHouses, myPosts } = require("../models/querys");
 const { getOne } = require("../models/querys");
 const uuid = require("uuid");
@@ -19,20 +18,21 @@ module.exports = {
         try {
             const id = req.params.id;
             resultado = await getOne(id);
-            res.json({ res: resultado });
+            res.json({ response: resultado });
         } catch (error) {
             resultado = new Error("internal error");
             res.json({ error: resultado }).status(501);
+            throw error;
         }
     },
     getHouse: async (req, res) => {
         try {
             const { provincia, municipio, bairro, tipologia, preco } = req.query;
             console.log(req.query)
-            let resposta = { result: "", error: '' }
+            let response = { result: "", error: '' }
             let resultado = await getHouses(provincia, municipio, bairro, tipologia, preco);
-            resposta.result = resultado;
-            res.json(resposta);
+            response.result = resultado;
+            res.json(response);
         } catch (error) {
             console.log(error);
             res.json({ error: "internal error" }).status(501);
@@ -43,51 +43,121 @@ module.exports = {
     },
     /* I finish i need only meke some testes */
     postNewHouse: async (req, res) => {
-        const id = req.user.id //descomtar isso;
-        const { provincia, preco, bairro, municipio, state, tipologia } = req.body;
-        let resposta = { result: "", error: '' }
-        if (!req.files) {
-            res.json({ "error": "prescisa de image " });
-            return;
-        }
-        const { image } = req.files;
-        const alawed = ['image/jpeg', 'image/png', 'image/jpg'];
-        let sizeFile = (image.size) / 1048576 //Peso em MB da imagem
-        if (alawed.includes(image.mimetype) && sizeFile < 100) {
-            let imagem = uuid.v4();
-            imagem = imagem.concat(image.name);
-            await image.mv(`./src/public/image/${imagem}`, (err) => {
-                if (err) {
-                    console.log("error" + err);
-                    resposta.error = err;
-                    return;
-                }
-            })
-            /* Postagens das casas no banco de dados*/
-            try{
-            let resultado = await postNewHouses(id, provincia, preco, bairro, municipio, imagem, state, tipologia);
-            res.json({result:"Casa postada com sucesso"});
-            }catch(error){
-                console.log(error);
-                res.json({error:"internal error"}).status(501);
+        try {
+            const id = req.user.id;
+            const {
+                provincia,
+                preco,
+                bairro,
+                municipio,
+                state,
+                tipologia
+            } = req.body;
+            if (!req.files || !req.files.image) {
+
+                return response.status(400).json({
+                    error: "A imagem principal é obrigatória"
+                });
+
             }
-            return;
-        } else {
-            resposta.error = "arquivo não suportado";
-            res.status(500);
+            let images = req.files.image;
+            // transformar em array caso venha apenas uma imagem
+            if (!Array.isArray(images)) {
+                images = [images];
+            }
+            // máximo permitido pelo schema
+            if (images.length > 3) {
+
+                return res.status(400).json({
+                    error: "Máximo de 3 imagens permitido"
+                });
+
+            }
+            const allowed = [
+                "image/jpeg",
+                "image/png",
+                "image/jpg"
+            ];
+            let imageNames = [];
+            // validar todas imagens
+            for (const img of images) {
+                if (!allowed.includes(img.mimetype)) {
+
+                    return res.status(400).json({
+                        error: "Formato de imagem inválido"
+                    });
+
+                }
+                const size = img.size / 1048576;
+                if (size > 100) {
+                    return res.status(400).json({
+                        error: "Imagem maior que 100MB"
+                    });
+
+                }
+            }
+            // upload das imagens
+            for (const img of images) {
+                const name = uuid.v4() + img.name;
+                const path = `./src/public/image/${name}`;
+                await img.mv(path);
+                imageNames.push(name);
+
+            }
+            try {
+                const resultado = await postNewHouses(
+                    id,
+                    provincia,
+                    preco,
+                    bairro,
+                    municipio,
+                    {
+                        image1: imageNames[0],
+                        image2: imageNames[1] || null,
+                        image3: imageNames[2] || null
+                    },
+                    state,
+                    tipologia
+
+                );
+                return res.status(201).json({
+                    response: {
+                        message: "Casa criada com sucesso",
+                        imagens: imageNames.length,
+                        house: resultado
+                    }
+
+                });
+            } catch (error) {
+                console.log(error);
+                // se banco falhar remove imagens enviadas
+                imageNames.forEach(img => {
+                    const file = `./src/public/image/${img}`;
+                    if (fs.existsSync(file)) {
+                        fs.unlinkSync(file);
+                    }
+
+                });
+                return res.status(500).json({
+                    error: "Erro ao guardar casa no banco"
+
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                error: "Erro interno no servidor"
+
+            });
 
         }
-        res.json(resposta);
-
 
     },//por termina a rota de edit action
     myHoses: async function (req, res) {
         try {
-            const dados = req.body;
-            const id = req.params.id;
             const idUs = req.user.id;
-            const result = myPosts(id, idUs);
-            res.json({ res: result });
+            const result = await myPosts(idUs);
+            res.json({ response: result });
 
 
         } catch (error) {

@@ -1,20 +1,41 @@
-const userModel = require("./userModel");
+const {PrismaClient} = require("@prisma/client");
+const { users } = new PrismaClient()
 const setDateDB = async function (nome, email, telefone, password_has) {
     try {
-        const date =  Date.now();
-        await userModel.create({
-            nome:nome,
-            telefone:telefone,
-            email:email,
-            password_has: password_has,
-            createAt: date
-        });
-        console.log("tudo ok");
-        return "Usuario Criado com sucesso";
-    } catch(error) {
-        console.log(error);
-        return new Error("internal error on server");
-    }
 
+        await users.create({
+            data:{
+                nome,
+                telefone:Number(telefone),
+                email,
+                password_has,
+                createdAt:new Date(),
+                token:""
+            }
+        });
+
+        return "Usuario Criado com sucesso";
+
+    } catch(error) {
+
+        console.log(error);
+
+        // erro de campo unique (email ou telefone repetido)
+        if(error.code === "P2002"){
+
+            const campo = error.meta.target;
+
+            return {
+                error:true,
+                message:`Email invalido e/ ou numero de telefone!`
+            };
+        }
+
+
+        return {
+            error:true,
+            message:"Erro interno no servidor"
+        };
+    }
 }
 module.exports = setDateDB;

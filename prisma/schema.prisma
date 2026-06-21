@@ -31,12 +31,13 @@ model imagens_casas {
   image1 String? @db.VarChar(144)
   image2 String? @db.VarChar(144)
   image3 String? @db.VarChar(144)
-  id     Int     @id
+  id      Int @id @default(autoincrement())
+
   casas  casas[]
 }
 
 model localizaco {
-  id        Int     @id
+  id        Int     @id @default(autoincrement())
   provincia String? @db.VarChar(24)
   municipio String? @db.VarChar(24)
   bairro    String? @db.VarChar(24)
@@ -50,10 +51,10 @@ model produto {
 }
 
 model users {
-  id           Int       @id
+  id           Int       @id @default(autoincrement())
   nome         String?   @db.VarChar(45)
-  email        String?   @db.VarChar(45)
-  telefone     Int?
+  email        String?   @unique @db.VarChar(45)
+  telefone     Int?      @unique
   token        String    @db.VarChar(70)
   password_has String?   @db.VarChar(188)
   updatedAt    DateTime? @db.Date

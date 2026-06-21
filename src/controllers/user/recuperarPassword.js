@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
               const has = await bcrypt.hash(password, 10);
               await USER.update({
                      password_has: has
-              }, {
+              }, { 
                      where: { token: token }
               })
               res.json({ msg: "senha alterada com sucesso", senha: has });

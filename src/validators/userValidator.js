@@ -4,6 +4,9 @@ const userValidator = checkSchema({
      nome:{
         notEmpty:{
             errorMessage:"Prencha o campo do nome"
+        },
+        isString:{
+            errorMessage:'Nome invalido'
         }
      }, email:{
         isEmail:{
@@ -17,6 +20,9 @@ const userValidator = checkSchema({
         notEmpty:{
             errorMessage  :'Digit um numro de tlefone'
         },
+        isNumeric:{
+            errorMessage:'Telefone invalido'
+        },
         isLength:{
             options:{ max:9, min:9 },
             errorMessage:'Digite um telefone valido'
@@ -24,6 +30,13 @@ const userValidator = checkSchema({
      }, password:{
         notEmpty:{
             errorMessage:"Digite uma senha"
+        },
+        isLength:{
+            options:{ max:9, min:9 },
+            errorMessage:'Digite uma senha segura'
+        },
+        isString:{
+            errorMessage:'Password indalida'
         }
      } 
 });

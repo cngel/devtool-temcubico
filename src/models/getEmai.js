@@ -1,7 +1,8 @@
-const userModel = require("./userModel");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new  PrismaClient();
 const getEmail = async function (email,telefone) {
     try {
-        const user = await userModel.findOne({ where: {email: email} });
+        const user = await prisma.users.findFirst({ where: {email: email} });
         return user;
     }
     catch(error) {

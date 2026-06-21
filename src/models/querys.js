@@ -25,61 +25,104 @@ module.exports = {
         }
 
     },
-    /*i need make upgrade in search */
+    /*i need make upgrade in search missed add price more ou iqual */
     getHouses: async (provincia, municipio, bairro, tipologia, preco) => {
         try {
-            const result = await HOUSES.findAll({
-                where: {
-                    provincia: provincia,
-                    municipio: municipio,
-                    bairro: bairro,
-                    preco: preco,
-                    tipologia: tipologia
+            let filtro = {};
+            if (tipologia) {
+                filtro.tipologia = Number(tipologia);
+            }
+            if (preco) {
+                filtro.preco = Number(preco);
+            }
+            if (provincia || municipio || bairro) {
+                filtro.localizaco = {
+                    ...(provincia && {
+                        provincia
+                    }),
+
+                    ...(municipio && {
+                        municipio
+                    }),
+
+                    ...(bairro && {
+                        bairro
+                    })
+                };
+            }
+            return await prisma.casas.findMany({
+                where: filtro,
+                include: {
+                    localizaco: true,
+                    imagens_casas: true
                 }
-            })
-            return result;
-        }
-        catch (error) {
-            console.error({ error: error }); 1
-            return new Error("internal error");
+            });
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     },
     /* Routers for post new house all inputs is nesseciry */
-    postNewHouses: async (idUser, provincia, preco, bairro, municipio, image, state, tipologia) => {
+    postNewHouses: async (
+        idUser,
+        provincia,
+        preco,
+        bairro,
+        municipio,
+        image,
+        state,
+        tipologia
+    ) => {
+
         try {
-            await HOUSES.create({
-                idUser: idUser,
-                provincia: provincia,
-                preco: preco,
-                image: image,
-                tipologia: tipologia,
-                bairro: bairro,
-                municipio: municipio,
-                state: state,
-                createdAt: Date.now()
+            // criar localização
+            const localizacao = await prisma.localizaco.create({
+                data: {
+                    provincia,
+                    municipio,
+                    bairro
+                }
             });
-            console.log("evoriting ok");
-            return "Post com sucesso";
+            // criar imagens
+            const imagens = await prisma.imagens_casas.create({
+                data: {
+                    image1: image.image1,
+                    image2: image.image2 || null,
+                    image3: image.image3 || null
+                }
+
+            });
+            // criar casa
+            const casa = await prisma.casas.create({
+                data: {
+                    idUser: Number(idUser),
+                    preco: Number(preco),
+                    state,
+                    tipologia: Number(tipologia),
+                    localizacao: localizacao.id,
+                    images: imagens.id,
+                    createdAt: new Date()
+                }
+
+            });
+            console.log("POST DONE SUSSEFULY");
+            return casa;
         } catch (error) {
-            console.log(error);
-            return new Error("error ao postar house");
-
+            console.log("ERRO POST HOUSE:", error);
+            throw error;
         }
-
     },
-    myPosts: async function (id, idUsuario) {
-        try {
-            return await HOUSES.findAll({
-                where: {
-                    id: id,
-                    idUser: idUsuario
+    myPosts: async function (idUsuario) {
+          try{
+            return prisma.casas.findMany({
+                where:{
+                    idUser:Number(idUsuario)
                 }
             })
-        } catch (error) {
-            console.log(error);
-            return new Error("errror on server");
-        }
+          }catch(error){   
+                console.log("error:"+error); 
+                throw error
+          }
     }
-
 
 }

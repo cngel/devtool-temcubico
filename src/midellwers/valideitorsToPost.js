@@ -30,7 +30,7 @@
         }
      },
      municipio:{
-        isEmpty:{
+        notEmpty:{
             errorMessage:'Digite o municipio'
         }
      }, 

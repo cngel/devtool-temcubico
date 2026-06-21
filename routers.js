@@ -17,24 +17,45 @@ router.get("/", (req, res) => {
 });
 
 /**routers to get @houses */
-router.get("/getAll", hausesController.getAlls);
-router.get("/getOne/:id", hausesController.getOnes);
-router.get("/getHouse", hausesController.getHouse);
-router.post("/postNewHouse", loginMidellwere, houseValidator,validation, hausesController.postNewHouse);
-router.get("/mypostes/:id", loginMidellwere, houseValidator,validation, hausesController.myHoses);
+router.get("/getAll", hausesController.getAlls); //done
+router.get("/getOne/:id", hausesController.getOnes); //done
+router.get("/getHouse", hausesController.getHouse); //done
+
+router.post("/postNewHouse",
+     loginMidellwere, houseValidator,
+     validation,
+      hausesController.postNewHouse
+); //done
+router.get("/mypostes", 
+    loginMidellwere,
+     hausesController.myHoses
+);
 //criar rotas para editar os posts
 /**end of @houses */
 
 /**router to controller @users */
-router.post("/user/login", loginController);
+router.post("/user/login", loginController); //done
+
 router.post("/user/cadastro",
     userValidator,
     validation,
     cadastroController
-);
-router.get("/user/profile/me", loginMidellwere, userControler.getUserInfo);
-router.post("/user/updateUserInfo", loginMidellwere, userControler.updateUserInfo);
-router.get("/user/getUserInfo/:idUser", loginMidellwere, userControler.getUserInfo);
+); //done
+router.get("/user/profile/me",
+     loginMidellwere, 
+     userControler.getUserInfo
+); //done
+ 
+router.post("/user/updateUserInfo", 
+     loginMidellwere,
+     userControler.updateUserInfo
+); //done
+
+router.get("/user/getUserInfo/:id", 
+    loginMidellwere, 
+    userControler.anotherUserInfo
+); //done
+
 router.post("/user/forgetPassord", forgetPassord);
 //enviar o token e a nova password;
 router.post("/user/recuperar",recuperar);

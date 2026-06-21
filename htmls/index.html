@@ -1,36 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <title>Teste Tem Kubico API</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 700px;
+            margin: 30px auto;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+
+
+        button {
+            background: #222;
+            color: white;
+            cursor: pointer;
+        }
+
+
+        img {
+            width: 150px;
+            margin: 10px;
+        }
+
+
+        #resultado {
+
+            background: #eee;
+            padding: 15px;
+            white-space: pre-wrap;
+
+        }
+    </style>
+
 </head>
+
+
 <body>
-  <!-- provincia,preco,bairro,municipio,imagem ,state,tipologia -->
-  <form action="http://localhost:3000/api/postNewHouse" method="post" enctype="multipart/form-data" >
-    <label>Provincia</label>
-    <input type="text" name="provincia" id="">
-    <br>
-    <label>preco</label>
-    <input type="text" name="preco" id="">
-    <br>
-    
-    <label>bairro</label>
-    <input type="text" name="bairro" id="">
-    <br>
-    <label>municipio</label>
-    <input type="text" name="municipio" id="">
-    <br>
-    <label>state</label>
-    <input type="text" name="state" id="">
-    <br>
-    <label>tipologia</label>
-    <input type="number" name="tipologia" id="">
-    <br>
-    <input type="file" name="image">
-    <br>
-    <a href="http://" target="_blank" rel="noopener noreferrer"></a>
-    <input type="submit" value="enviar">
-  </form>
+
+
+    <h2>Teste Post Casa - Tem Kubico</h2>
+
+
+    <label>Token JWT</label>
+
+    <input id="token" placeholder="Bearer token">
+
+
+    <label>Província</label>
+
+    <input id="provincia" value="Luanda">
+
+
+
+    <label>Município</label>
+
+    <input id="municipio" value="Talatona">
+
+
+
+    <label>Bairro</label>
+
+    <input id="bairro" value="Benfica">
+
+
+
+    <label>Preço</label>
+
+    <input id="preco" type="number" value="250000">
+
+
+
+    <label>Estado</label>
+
+    <select id="state">
+
+        <option value="nao vendido">
+            Não vendido
+        </option>
+
+        <option value="vendido">
+            Vendido
+        </option>
+
+    </select>
+
+
+
+    <label>Tipologia</label>
+
+    <input id="tipologia" type="number" value="3">
+
+
+
+    <label>Imagens (1 obrigatório, máximo 3)</label>
+
+    <input type="file" id="images" multiple accept="image/*">
+
+
+
+    <div id="preview"></div>
+
+
+
+    <button onclick="enviar()">
+        Publicar Casa
+    </button>
+
+
+
+    <h3>Resposta</h3>
+
+    <div id="resultado"></div>
+
+
+
+
+
+    <script>
+
+
+        const imagesInput = document.getElementById("images");
+
+
+        imagesInput.addEventListener("change", () => {
+
+
+            let preview = document.getElementById("preview");
+
+            preview.innerHTML = "";
+
+
+            Array.from(imagesInput.files).forEach(file => {
+
+
+                let img = document.createElement("img");
+
+
+                img.src = URL.createObjectURL(file);
+
+
+                preview.appendChild(img);
+
+
+
+            });
+
+
+        });
+
+
+
+
+
+
+        async function enviar() {
+
+
+
+            let formData = new FormData();
+
+
+
+            formData.append(
+                "provincia",
+                document.getElementById("provincia").value
+            );
+
+
+            formData.append(
+                "municipio",
+                document.getElementById("municipio").value
+            );
+            formData.append(
+                "bairro",
+                document.getElementById("bairro").value
+            );
+           formData.append(
+                "preco",
+                document.getElementById("preco").value
+            );
+           formData.append(
+                "state",
+                document.getElementById("state").value
+            );
+            formData.append(
+                "tipologia",
+                document.getElementById("tipologia").value
+            );
+
+           let files = imagesInput.files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append(
+                    "image",
+                    files[i]
+                );
+            }
+            let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsIm5vbWUiOiJjYXJsb3MgUXVpdHVtYmEiLCJlbWFpbCI6ImNhcmxvc0BnbWFpbC5jb20iLCJ0ZWxlZm9uZSI6OTM4MTIwMTYxLCJpYXQiOjE3ODE5NTUxMjUsImV4cCI6MTc4MjA0MTUyNX0.4-HirrdNFe70EMVAw1pRsPpqdRd3dmYEYkuyC-a5tbs";
+            try {
+                let resposta = await fetch(
+                    "http://localhost:5000/api/postNewHouse",
+                    {
+                      method: "POST",
+                        headers: {
+                            Authorization:token
+                        },
+                        body: formData
+                   });
+                let data = await resposta.json();
+                document.getElementById("resultado")
+                    .innerHTML =
+                    JSON.stringify(data, null, 2);
+           } catch (error) {
+                document.getElementById("resultado")
+                    .innerHTML =
+                    error;
+            }
+
+
+
+        }
+
+
+
+    </script>
+
+
+
 </body>
+
 </html>

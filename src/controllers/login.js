@@ -5,9 +5,7 @@ const SECRET = process.env.KEY;
 
 module.exports = async function (req, res) {
     const { email, password } = req.body;
-    const dataUser = await getEmail(email);
-    const user = dataUser;
-
+    const user = await getEmail(email);
     if (!user) {
         return res.status(401).json({ error: "Email e/ou senha incorretos" });
     }
